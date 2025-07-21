@@ -3,8 +3,8 @@ import 'package:flutter_e_commerce_c11_online/core/routes_manager/routes.dart';
 import 'package:flutter_e_commerce_c11_online/features/cart/screens/cart_screen.dart';
 import 'package:flutter_e_commerce_c11_online/features/splash/splash_screen.dart';
 
-import '../../features/auth/presentation/screens/sign_in_screen.dart';
-import '../../features/auth/presentation/screens/sign_up_screen.dart';
+import '../../features/auth/presentation/screens/sign_in/sign_in_screen.dart';
+import '../../features/auth/presentation/screens/sign_up/sign_up_screen.dart';
 import '../../features/main_layout/main_layout.dart';
 import '../../features/product_details/presentation/screen/product_details.dart';
 import '../../features/products_screen/presentation/screens/products_screen.dart';
@@ -24,13 +24,13 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const ProductDetails());
 
       case Routes.signInRoute:
-        return MaterialPageRoute(builder: (_) => const SignInScreen());
+        return MaterialPageRoute(builder: (_) =>  SignInScreen());
 
       case Routes.splashScreenRoute:
         return MaterialPageRoute(builder: (_) => const SplashScreen());
 
       case Routes.signUpRoute:
-        return MaterialPageRoute(builder: (_) => const SignUpScreen());
+        return MaterialPageRoute(builder: (_) =>  SignUpScreen());
       default:
         return unDefinedRoute();
     }

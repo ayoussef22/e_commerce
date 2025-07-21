@@ -32,9 +32,11 @@ class AppValidators {
 
   static String? validateConfirmPassword(String? val, String? password) {
     if (val == null || val.isEmpty) {
-      return 'this field is required';
+      return 'This field is required';
+    } else if (password == null || password.isEmpty) {
+      return 'Password field is empty';
     } else if (val != password) {
-      return 'same password';
+      return 'Passwords do not match';
     } else {
       return null;
     }
