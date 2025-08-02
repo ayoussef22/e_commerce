@@ -1,9 +1,11 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_e_commerce_c11_online/features/main_layout/home/presentation/widgets/custom_brand_widget.dart';
-import 'package:flutter_e_commerce_c11_online/features/main_layout/home/presentation/widgets/custom_category_widget.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_e_commerce_c11_online/core/resources/color_manager.dart';
+import 'package:flutter_e_commerce_c11_online/di/di.dart';
+import 'package:flutter_e_commerce_c11_online/features/main_layout/home/presentation/Cubit/home_tab_states.dart';
+import 'package:flutter_e_commerce_c11_online/features/main_layout/home/presentation/Cubit/home_tab_view_model.dart';
+import 'package:flutter_e_commerce_c11_online/features/main_layout/home/presentation/widgets/custom_category_or_brand_widget.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../core/resources/assets_manager.dart';
 import 'widgets/custom_ads_widget.dart';
 import 'widgets/custom_section_bar.dart';
 
@@ -15,105 +17,87 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
-  int _currentIndex = 0;
-  late Timer _timer;
-
-  final List<String> adsImages = [
-    ImageAssets.carouselSlider1,
-    ImageAssets.carouselSlider2,
-    ImageAssets.carouselSlider3,
-  ];
+  HomeTabViewModel viewModel = getIt<HomeTabViewModel>();
 
   @override
   void initState() {
     super.initState();
-    _startImageSwitching();
-  }
-
-  void _startImageSwitching() {
-    _timer = Timer.periodic(const Duration(milliseconds: 2500), (Timer timer) {
-      setState(() {
-        _currentIndex = (_currentIndex + 1) % adsImages.length;
-      });
-    });
+    viewModel.startImageSwitching();
+    viewModel.getAllCategories();
+    viewModel.getAllBrands();
   }
 
   @override
   void dispose() {
-    _timer.cancel();
+    viewModel.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          CustomAdsWidget(
-            adsImages: adsImages,
-            currentIndex: _currentIndex,
-            timer: _timer,
-          ),
-          Column(
+    return BlocBuilder<HomeTabViewModel, HomeTabStates>(
+      bloc: viewModel,
+      builder: (context, state) {
+        return SingleChildScrollView(
+          child: Column(
             children: [
-              CustomSectionBar(sectionNname: 'Categories', function: () {}),
-              SizedBox(
-                height: 270.h,
-                child: GridView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return const CustomCategoryWidget();
-                  },
-                  itemCount: 20,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                  ),
-                ),
+              CustomAdsWidget(
+                adsImages: viewModel.adsImages,
+                currentIndex: viewModel.currentIndex,
               ),
-              SizedBox(height: 12.h),
-              CustomSectionBar(sectionNname: 'Brands', function: () {}),
-              SizedBox(
-                height: 270.h,
-                child: GridView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return const CustomBrandWidget();
-                  },
-                  itemCount: 20,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
+              Column(
+                children: [
+                  CustomSectionBar(sectionNname: 'Categories', function: () {}),
+                  viewModel.categoryList.isNotEmpty
+                      ? SizedBox(
+                          height: 270.h,
+                          child: GridView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              return CustomCategoryOrBrandWidget(
+                                  categoryOrBrand: viewModel.categoryList[index]);
+                            },
+                            itemCount: viewModel.categoryList.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                            ),
+                          ),
+                        )
+                      : Center(
+                          child: CircularProgressIndicator(
+                            color: ColorManager.darkPrimary,
+                          ),
+                        ),
+                  SizedBox(height: 12.h),
+                  CustomSectionBar(sectionNname: 'Brands', function: () {}),
+                  viewModel.brandList.isNotEmpty ?
+                  SizedBox(
+                    height: 270.h,
+                    child: GridView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        return CustomCategoryOrBrandWidget(categoryOrBrand: viewModel.brandList[index]);
+                      },
+                      itemCount: viewModel.brandList.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                      ),
+                    ),
+                  ):
+                  Center(
+                    child: CircularProgressIndicator(
+                      color: ColorManager.darkPrimary,
+                    ),
                   ),
-                ),
-              ),
-              // CustomSectionBar(
-              //   sectionNname: 'Most Selling Products',
-              //   function: () {},
-              // ),
-              // SizedBox(
-              //   child: SizedBox(
-              //     height: 360.h,
-              //     child: ListView.builder(
-              //       scrollDirection: Axis.horizontal,
-              //       itemBuilder: (context, index) {
-              //         return const ProductCard(
-              //           title: "Nike Air Jordon",
-              //           description:
-              //               "Nike is a multinational corporation that designs, develops, and sells athletic footwear ,apparel, and accessories",
-              //           rating: 4.5,
-              //           price: 1100,
-              //           priceBeforeDiscound: 1500,
-              //           image: ImageAssets.categoryHomeImage,
-              //         );
-              //       },
-              //       itemCount: 20,
-              //     ),
-              //   ),
-              // ),
-              SizedBox(height: 12.h),
+                  SizedBox(height: 12.h),
+                ],
+              )
             ],
-          )
-        ],
-      ),
+          ),
+        );
+      },
     );
   }
 }

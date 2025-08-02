@@ -10,8 +10,8 @@ import 'package:injectable/injectable.dart';
 class LoginViewModel extends Cubit<LoginStates> {
   LoginUseCase loginUseCase;
 
-  var emailController = TextEditingController();
-  var passwordController = TextEditingController();
+  var emailController = TextEditingController(text: 'rtyu22@gmail.com');
+  var passwordController = TextEditingController(text: 'Rtyu12345');
 
 
   LoginViewModel({required this.loginUseCase})
