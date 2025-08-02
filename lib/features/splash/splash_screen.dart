@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_e_commerce_c11_online/core/resources/assets_manager.dart';
 import '../../core/routes_manager/routes.dart';
+import '../../core/widget/shared_preference_utils.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -15,7 +16,14 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(Duration(seconds: 3), () {
-      Navigator.pushReplacementNamed(context, Routes.signInRoute);
+      var token=SharedPreferenceUtils.getData(key: 'token');
+      String route;
+      if(token==null){
+        route=Routes.signInRoute;
+      }else{
+        route=Routes.mainRoute;
+      }
+      Navigator.pushReplacementNamed(context, route);
     });
   }
   @override

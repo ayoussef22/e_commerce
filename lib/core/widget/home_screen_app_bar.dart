@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_e_commerce_c11_online/core/widget/shared_preference_utils.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import '../resources/assets_manager.dart';
@@ -19,13 +20,24 @@ class HomeScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       surfaceTintColor: Colors.white,
       automaticallyImplyLeading: automaticallyImplyLeading??false,
-      title: SvgPicture.asset(
-        SvgAssets.routeLogo,
-        height: 25.h,
-        width: 25.w,
-        colorFilter:
-            const ColorFilter.mode(ColorManager.textColor,
-                BlendMode.srcIn),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SvgPicture.asset(
+            SvgAssets.routeLogo,
+            height: 25.h,
+            width: 25.w,
+            colorFilter:
+                const ColorFilter.mode(ColorManager.textColor,
+                    BlendMode.srcIn),
+          ),
+          IconButton(onPressed: (){
+            //todo : remove token
+            SharedPreferenceUtils.removeDate(key: 'token');
+            //todo : navigate to login screen
+            Navigator.of(context).pushNamedAndRemoveUntil(Routes.signInRoute, (route)=> false);
+          }, icon: const Icon(Icons.logout))
+        ],
       ),
       bottom: PreferredSize(
           preferredSize: const Size(AppSize.s100, AppSize.s60),
