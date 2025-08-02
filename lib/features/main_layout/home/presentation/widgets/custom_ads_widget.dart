@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -8,13 +7,12 @@ import '../../../../../core/resources/values_manager.dart';
 class CustomAdsWidget extends StatelessWidget {
   final List<String> adsImages;
   final int currentIndex;
-  final Timer timer;
+
 
   const CustomAdsWidget({
     super.key,
     required this.adsImages,
     required this.currentIndex,
-    required this.timer,
   });
 
   @override
