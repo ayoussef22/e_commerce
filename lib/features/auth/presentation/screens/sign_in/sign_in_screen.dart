@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_e_commerce_c11_online/core/widget/DialogUtils.dart';
+import 'package:flutter_e_commerce_c11_online/core/widget/shared_preference_utils.dart';
 import 'package:flutter_e_commerce_c11_online/di/di.dart';
 import 'package:flutter_e_commerce_c11_online/features/auth/presentation/screens/sign_in/cubit/sign_in_states.dart';
 import 'package:flutter_e_commerce_c11_online/features/auth/presentation/screens/sign_in/cubit/sign_in_view_model.dart';
@@ -34,10 +35,15 @@ LoginViewModel viewModel=getIt<LoginViewModel>();
         }
         if(state is LoginSuccessState){
           DialogUtils.hideLoading(context);
-          DialogUtils.showMessage(context, 'Login Successfully', title: 'Success' , posActionName: 'OK'
-          ,posAction: (){
-            Navigator.of(context).pushReplacementNamed(Routes.mainRoute);
-              });
+          DialogUtils.showMessage(context, 'Login Successfully', title: 'Success' , posActionName: 'OK',
+            posAction: (){
+              //todo : save token
+              SharedPreferenceUtils.saveDate(key: 'token', value: state.responseEntity.token);
+              Navigator.of(context).pushReplacementNamed(Routes.mainRoute);
+            }
+          );
+
+
         }
       },
       child: Scaffold(

@@ -53,6 +53,7 @@ class HomeTabViewModel extends Cubit<HomeTabStates> {
 
   void startImageSwitching() {
     timer = Timer.periodic(const Duration(milliseconds: 2500), (Timer timer) {
+      if (isClosed) return;
         currentIndex = (currentIndex + 1) % adsImages.length;
         emit(HomeAdsIndexChangedState(currentIndex: currentIndex));
     });
