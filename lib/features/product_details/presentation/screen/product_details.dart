@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_e_commerce_c11_online/domain/entities/ProductResponseEntity.dart';
+import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/resources/assets_manager.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/styles_manager.dart';
 import '../../../../core/widget/custom_elevated_button.dart';
-import '../widgets/product_color.dart';
 import '../widgets/product_description.dart';
-import '../widgets/product_item.dart';
 import '../widgets/product_label.dart';
 import '../widgets/product_rating.dart';
-import '../widgets/product_size.dart';
-import '../widgets/product_slider.dart';
 
 class ProductDetails extends StatelessWidget {
-  const ProductDetails({super.key});
+  final ProductEntity product;
+
+  const ProductDetails({Key? key, required this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,52 +45,31 @@ class ProductDetails extends StatelessWidget {
           padding: EdgeInsets.only(left: 16.w, right: 16.w, bottom: 50.h),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const ProductSlider(items: [
-              ProductItem(
-                imageUrl:
-                    'https://assets.adidas.com/images/w_1880,f_auto,q_auto/6776024790f445b0873ee66fdcde54a1_9366/GX6544_HM3_hover.jpg',
-              ),
-              ProductItem(
-                imageUrl:
-                    'https://assets.adidas.com/images/w_1880,f_auto,q_auto/6776024790f445b0873ee66fdcde54a1_9366/GX6544_HM3_hover.jpg',
-              ),
-              ProductItem(
-                imageUrl:
-                    "https://assets.adidas.com/images/w_1880,f_auto,q_auto/6776024790f445b0873ee66fdcde54a1_9366/GX6544_HM3_hover.jpg",
-              )
-            ], initialIndex: 0),
+            ImageSlideshow(
+              children: product.images!
+                  .map((url) => Image.network(
+                        url,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ))
+                  .toList(),
+            ),
             SizedBox(
               height: 24.h,
             ),
-            const ProductLabel(
-                productName: 'Nike Air Jordon', productPrice: 'EGP 3,500'),
+            ProductLabel(
+                productName: product.title ?? '',
+                productPrice: 'EGP ${product.price}'),
             SizedBox(
               height: 16.h,
             ),
-            const ProductRating(
-                productBuyers: '3,230', productRating: '4.8 (7,500)'),
+            ProductRating(
+                productBuyers: '${product.sold} Sold',
+                productRating: '${product.ratingsAverage}'),
             SizedBox(
               height: 16.h,
             ),
-            const ProductDescription(
-                productDescription:
-                    'Nike is a multinational corporation that designs, develops, and sells athletic footwear ,apparel, and accessories'),
-            ProductSize(
-              size: const [35, 38, 39, 40],
-              onSelected: () {},
-            ),
-            SizedBox(
-              height: 20.h,
-            ),
-            Text('Color',
-                style: getMediumStyle(color: ColorManager.appBarTitleColor)
-                    .copyWith(fontSize: 18.sp)),
-            ProductColor(color: const [
-              Colors.red,
-              Colors.blueAccent,
-              Colors.green,
-              Colors.yellow,
-            ], onSelected: () {}),
+            ProductDescription(productDescription: product.description ?? ''),
             SizedBox(
               height: 48.h,
             ),
@@ -101,13 +80,14 @@ class ProductDetails extends StatelessWidget {
                     Text(
                       'Total price',
                       style: getMediumStyle(
-                              color: ColorManager.primary.withOpacity(.6))
+                              color:
+                                  ColorManager.primary.withValues(alpha: 153))
                           .copyWith(fontSize: 18.sp),
                     ),
                     SizedBox(
                       height: 12.h,
                     ),
-                    Text('EGP 3,500',
+                    Text('EGP ${product.price}',
                         style:
                             getMediumStyle(color: ColorManager.appBarTitleColor)
                                 .copyWith(fontSize: 18.sp))

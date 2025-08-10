@@ -27,6 +27,7 @@ import '../domain/repository/auth_repository.dart' as _i306;
 import '../domain/repository/HomeRepository.dart' as _i567;
 import '../domain/use_cases/get_all_brands_use_case.dart' as _i823;
 import '../domain/use_cases/get_all_categories_use_case.dart' as _i557;
+import '../domain/use_cases/get_all_products_use_case.dart' as _i960;
 import '../domain/use_cases/login_use_case.dart' as _i826;
 import '../domain/use_cases/register_use_case.dart' as _i772;
 import '../features/auth/presentation/screens/sign_in/cubit/sign_in_view_model.dart'
@@ -35,6 +36,8 @@ import '../features/auth/presentation/screens/sign_up/cubit/sign_up_view_model.d
     as _i4;
 import '../features/main_layout/home/presentation/Cubit/home_tab_view_model.dart'
     as _i56;
+import '../features/products_screen/presentation/cubit/product_screen_view_model.dart'
+    as _i110;
 
 extension GetItInjectableX on _i174.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -65,6 +68,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i557.GetAllCategoriesUseCase>(() =>
         _i557.GetAllCategoriesUseCase(
             homeRepository: gh<_i567.HomeRepository>()));
+    gh.factory<_i960.GetAllProductsUseCase>(() => _i960.GetAllProductsUseCase(
+        homeRepository: gh<_i567.HomeRepository>()));
     gh.factory<_i56.HomeTabViewModel>(() => _i56.HomeTabViewModel(
           categoriesUseCase: gh<_i557.GetAllCategoriesUseCase>(),
           brandsUseCase: gh<_i823.GetAllBrandsUseCase>(),
@@ -73,6 +78,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i889.LoginViewModel(loginUseCase: gh<_i826.LoginUseCase>()));
     gh.factory<_i4.RegisterViewModel>(() =>
         _i4.RegisterViewModel(registerUseCase: gh<_i772.RegisterUseCase>()));
+    gh.factory<_i110.ProductScreenViewModel>(() => _i110.ProductScreenViewModel(
+        productsUseCase: gh<_i960.GetAllProductsUseCase>()));
     return this;
   }
 }
