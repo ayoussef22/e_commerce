@@ -1,31 +1,17 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_e_commerce_c11_online/domain/entities/ProductResponseEntity.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/styles_manager.dart';
 import '../../../../core/routes_manager/routes.dart';
 import '../../../../core/widget/heart_button.dart';
 
 class CustomProductWidget extends StatelessWidget {
-  final double width;
-  final double height;
-  final String image;
-  final String title;
-  final String description;
-  final double price;
-  final double discountPercentage;
-  final double rating;
+  final ProductEntity productEntity;
 
-  const CustomProductWidget({
-    super.key,
-    required this.width,
-    required this.height,
-    required this.image,
-    required this.title,
-    required this.description,
-    required this.price,
-    required this.discountPercentage,
-    required this.rating,
-  });
+  CustomProductWidget({required this.productEntity});
 
   String truncateTitle(String title) {
     List<String> words = title.split(' ');
@@ -48,14 +34,15 @@ class CustomProductWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Navigator.pushNamed(context, Routes.productDetails),
+      onTap: () => Navigator.pushNamed(context, Routes.productDetails,
+      arguments:productEntity),
       child: Container(
-        width: width * 0.4,
-        height: height * 0.3,
+        width: 191.w,
+        height: 230.h,
         decoration: BoxDecoration(
           border: Border.all(
-            color: ColorManager.primary.withOpacity(0.3),
-            width: 2,
+            color: ColorManager.primary.withValues(alpha: 77),
+            width: 2.w,
           ),
           borderRadius: BorderRadius.circular(16.r),
         ),
@@ -63,114 +50,93 @@ class CustomProductWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
-              flex: 5,
+              flex: 3,
               child: Stack(
                 alignment: AlignmentDirectional.center,
                 children: [
-                  // Not working with the lastest flutter version
-
-                  // CachedNetworkImage(
-                  //   imageUrl: image,
-                  //   height: height * 0.15,
-                  //   width: double.infinity,
-                  //   fit: BoxFit.cover,
-                  //   placeholder: (context, url) =>
-                  //       const Center(child: CircularProgressIndicator()),
-                  //   errorWidget: (context, url, error) => const Icon(Icons.error),
-                  // ),
-                  // Image.network(
-                  //   image,
-                  //   fit: BoxFit.cover,
-                  // ),
-                  ClipRRect(
-                    borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(14.r)),
-                    child: Image.asset(
-                      image,
-                      fit: BoxFit.cover,
-                      width: width,
+                  CachedNetworkImage(
+                    imageUrl: productEntity.imageCover ?? '',
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Center(
+                      child: CircularProgressIndicator(
+                        color: ColorManager.darkPrimary,
+                      ),
                     ),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
                   ),
                   Positioned(
-                      top: height * 0.01,
-                      right: width * 0.02,
-                      child: HeartButton(onTap: () {})),
+                    top: 8.h,
+                    right: 10.w,
+                    child: HeartButton(onTap: () {}),
+                  ),
                 ],
               ),
             ),
             Expanded(
-              flex: 5,
+              flex: 3,
               child: Padding(
                 padding: const EdgeInsets.all(4),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      truncateTitle(title),
+                      truncateTitle(productEntity.title ?? ''),
                       style: getMediumStyle(
                         color: ColorManager.textColor,
                         fontSize: 14.sp,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(height: height * 0.002),
+                    SizedBox(height: 4.h),
                     Text(
-                      truncateDescription(description),
+                      truncateDescription(productEntity.description ?? ''),
+                      style: getRegularStyle(
+                        color: ColorManager.textColor,
+                        fontSize: 12.sp,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      "EGP ${productEntity.price}",
                       style: getRegularStyle(
                         color: ColorManager.textColor,
                         fontSize: 14.sp,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(height: height * 0.01),
-                    SizedBox(
-                      width: width * 0.3,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "EGP $price",
-                            style: getRegularStyle(
-                              color: ColorManager.textColor,
-                              fontSize: 14.sp,
-                            ),
-                          ),
-                          Text(
-                            "$discountPercentage %",
-                            style: getTextWithLine(),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // SizedBox(height: height * 0.005),
+                    const Spacer(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        SizedBox(
-                          // width: width * 0.22,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Review ($rating)",
-                                style: getRegularStyle(
-                                  color: ColorManager.textColor,
-                                  fontSize: 12.sp,
-                                ),
+                        Row(
+                          children: [
+                            Text(
+                              "Review (${productEntity.ratingsAverage})",
+                              style: getRegularStyle(
+                                color: ColorManager.textColor,
+                                fontSize: 12.sp,
                               ),
-                              const Icon(
-                                Icons.star_rate_rounded,
-                                color: ColorManager.starRateColor,
-                              ),
-                            ],
-                          ),
+                            ),
+                            const Icon(
+                              Icons.star_rate_rounded,
+                              color: ColorManager.starRateColor,
+                              size: 14,
+                            ),
+                          ],
                         ),
-                        const Spacer(),
                         ClipRRect(
                           borderRadius: BorderRadius.circular(100),
                           child: InkWell(
                             onTap: () {},
                             child: Container(
-                              height: height * 0.036,
-                              width: width * 0.08,
+                              height: 26.h,
+                              width: 26.w,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: ColorManager.primary,
@@ -178,12 +144,13 @@ class CustomProductWidget extends StatelessWidget {
                               child: const Icon(
                                 Icons.add,
                                 color: Colors.white,
+                                size: 16,
                               ),
                             ),
                           ),
                         ),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),
