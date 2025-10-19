@@ -7,9 +7,12 @@ import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/styles_manager.dart';
 import '../../../../core/routes_manager/routes.dart';
 import '../../../../core/widget/heart_button.dart';
+import '../cubit/product_screen_view_model.dart';
 
 class CustomProductWidget extends StatelessWidget {
   final ProductEntity productEntity;
+
+
 
   CustomProductWidget({required this.productEntity});
 
@@ -41,7 +44,7 @@ class CustomProductWidget extends StatelessWidget {
         height: 230.h,
         decoration: BoxDecoration(
           border: Border.all(
-            color: ColorManager.primary.withValues(alpha: 77),
+            color: ColorManager.primary.withValues(alpha: 0.3),
             width: 2.w,
           ),
           borderRadius: BorderRadius.circular(16.r),
@@ -133,7 +136,9 @@ class CustomProductWidget extends StatelessWidget {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(100),
                           child: InkWell(
-                            onTap: () {},
+                            onTap: () {
+                             ProductScreenViewModel.of(context).addToCart(productEntity.id!);
+                            },
                             child: Container(
                               height: 26.h,
                               width: 26.w,
