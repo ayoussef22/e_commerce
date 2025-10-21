@@ -6,6 +6,8 @@ import '../../../../core/resources/assets_manager.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/styles_manager.dart';
 import '../../../../core/widget/custom_elevated_button.dart';
+import '../../../cart/cubit/get_cart_view_model.dart';
+import '../../../products_screen/presentation/cubit/product_screen_view_model.dart';
 import '../widgets/product_description.dart';
 import '../widgets/product_label.dart';
 import '../widgets/product_rating.dart';
@@ -99,7 +101,22 @@ class ProductDetails extends StatelessWidget {
                 Expanded(
                   child: CustomElevatedButton(
                     label: 'Add to cart',
-                    onTap: () {},
+                    onTap: () async {
+                      await ProductScreenViewModel.of(context)
+                          .addToCart(product.id!);
+                      // todo: snackBar for 2 seconds
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Text(
+                              '✅ Product added to cart successfully'),
+                          duration: const Duration(seconds: 2),
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: ColorManager.primary,
+                        ),
+                      );
+                      final cartVM = GetCartViewModel.of(context);
+                      cartVM.getCart();
+                    },
                     prefixIcon: Icon(
                       Icons.add_shopping_cart_outlined,
                       color: ColorManager.white,

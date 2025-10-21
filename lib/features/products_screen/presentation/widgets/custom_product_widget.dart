@@ -7,6 +7,8 @@ import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/styles_manager.dart';
 import '../../../../core/routes_manager/routes.dart';
 import '../../../../core/widget/heart_button.dart';
+import '../../../cart/cubit/get_cart_view_model.dart';
+import '../cubit/product_screen_view_model.dart';
 
 class CustomProductWidget extends StatelessWidget {
   final ProductEntity productEntity;
@@ -35,13 +37,13 @@ class CustomProductWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => Navigator.pushNamed(context, Routes.productDetails,
-      arguments:productEntity),
+          arguments: productEntity),
       child: Container(
         width: 191.w,
         height: 230.h,
         decoration: BoxDecoration(
           border: Border.all(
-            color: ColorManager.primary.withValues(alpha: 77),
+            color: ColorManager.primary.withValues(alpha: 0.3),
             width: 2.w,
           ),
           borderRadius: BorderRadius.circular(16.r),
@@ -133,7 +135,22 @@ class CustomProductWidget extends StatelessWidget {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(100),
                           child: InkWell(
-                            onTap: () {},
+                            onTap: () async {
+                              await ProductScreenViewModel.of(context)
+                                  .addToCart(productEntity.id!);
+                              //  snackBar for 2 seconds
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: const Text(
+                                      '✅ Product added to cart successfully'),
+                                  duration: const Duration(seconds: 2),
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: ColorManager.primary,
+                                ),
+                              );
+                              final cartVM = GetCartViewModel.of(context);
+                              cartVM.getCart();
+                            },
                             child: Container(
                               height: 26.h,
                               width: 26.w,

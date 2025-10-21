@@ -6,45 +6,33 @@ import '../../../core/resources/styles_manager.dart';
 import '../../../core/resources/values_manager.dart';
 import '../../../core/routes_manager/routes.dart';
 import '../../../core/widget/product_counter.dart';
-import 'color_and_size_cart_item.dart';
+import '../../../domain/entities/GetCartResponseEntity.dart';
+import '../cubit/get_cart_view_model.dart';
 
 class CartItemWidget extends StatelessWidget {
-  const CartItemWidget({
-    super.key,
-    required this.imagePath,
-    required this.title,
-    required this.color,
-    required this.colorName,
-    required this.size,
-    required this.price,
-    required this.onDeleteTap,
-    required this.quantity,
-    required this.onIncrementTap,
-    required this.onDecrementTap,
-  });
-  final String imagePath;
-  final String title;
-  final Color color;
-  final String colorName;
-  final int size;
-  final int price;
-  final void Function() onDeleteTap;
-  final int quantity;
-  final void Function(int value) onIncrementTap;
-  final void Function(int value) onDecrementTap;
+  GetProductCartEntity productCartEntity;
+
+  CartItemWidget({required this.productCartEntity});
+
   @override
   Widget build(BuildContext context) {
+    final getCartViewModel = GetCartViewModel.of(context);
     bool isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
     return InkWell(
-      onTap: () => Navigator.pushNamed(context, Routes.productDetails),
+      onTap: () => Navigator.pushNamed(
+        context,
+        Routes.productDetails,
+        arguments: productCartEntity,
+      ),
       child: Container(
         height: isPortrait ? height * 0.14 : width * 0.23,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15.r),
-          border: Border.all(color: ColorManager.primary.withOpacity(0.3)),
+          border:
+              Border.all(color: ColorManager.primary.withValues(alpha: 0.3)),
         ),
         child: Row(children: [
           // display image in the container
@@ -52,10 +40,11 @@ class CartItemWidget extends StatelessWidget {
             clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15.r),
-              border: Border.all(color: ColorManager.primary.withOpacity(0.3)),
+              border: Border.all(
+                  color: ColorManager.primary.withValues(alpha: 0.3)),
             ),
-            child: Image.asset(
-              imagePath,
+            child: Image.network(
+              productCartEntity.product?.imageCover ?? '',
               fit: BoxFit.cover,
               height: isPortrait ? height * 0.142 : height * 0.23,
               width: isPortrait ? width * 0.29 : 165.w,
@@ -79,7 +68,7 @@ class CartItemWidget extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          title,
+                          productCartEntity.product?.title ?? '',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: getBoldStyle(
@@ -89,7 +78,11 @@ class CartItemWidget extends StatelessWidget {
                         ),
                       ),
                       InkWell(
-                        onTap: onDeleteTap,
+                        onTap: () {
+                          // todo : delete
+                          getCartViewModel.deleteItemInCart(
+                              productCartEntity.product?.id ?? '');
+                        },
                         child: Image.asset(
                           IconsAssets.icDelete,
                           color: ColorManager.textColor,
@@ -98,22 +91,13 @@ class CartItemWidget extends StatelessWidget {
                       )
                     ],
                   ),
-
-                  // SizedBox(height: 7.h),
-                  const Spacer(),
-                  // display color and size===================
-                  ColorAndSizeCartItem(
-                    color: color,
-                    colorName: colorName,
-                    size: size,
-                  ),
-                  const Spacer(),
+                  SizedBox(height: 7.h),
                   // display price and quantity =================
                   Row(
                     children: [
                       Expanded(
                         child: Text(
-                          'EGP $price',
+                          'EGP ${productCartEntity.price}',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: getBoldStyle(
@@ -122,9 +106,19 @@ class CartItemWidget extends StatelessWidget {
                         ),
                       ),
                       ProductCounter(
-                        add: onIncrementTap,
-                        productCounter: quantity,
-                        remove: onDecrementTap,
+                        add: (int count) {
+                          count = productCartEntity.count!.toInt();
+                          count++;
+                          getCartViewModel.updateCountInCart(
+                              productCartEntity.product?.id ?? '', count);
+                        },
+                        productCounter: productCartEntity.count!.toInt(),
+                        remove: (int count) {
+                          count = productCartEntity.count!.toInt();
+                          count--;
+                          getCartViewModel.updateCountInCart(
+                              productCartEntity.product?.id ?? '', count);
+                        },
                       )
                     ],
                   ),
