@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_e_commerce_c11_online/core/widget/shared_preference_utils.dart';
-import 'package:flutter_e_commerce_c11_online/features/products_screen/presentation/cubit/product_screen_states.dart';
+import 'package:flutter_e_commerce_c11_online/features/cart/cubit/get_cart_view_model.dart';
+import 'package:flutter_e_commerce_c11_online/features/cart/cubit/get_cart_view_model_states.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import '../../features/products_screen/presentation/cubit/product_screen_view_model.dart';
 import '../resources/assets_manager.dart';
 import '../resources/color_manager.dart';
 import '../resources/font_manager.dart';
@@ -115,13 +115,15 @@ class HomeScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ),
               ),
-              BlocBuilder<ProductScreenViewModel, ProductScreenStates>(
+              BlocBuilder<GetCartViewModel, GetCartStates>(
                 builder: (context, state) {
-                  final vm = ProductScreenViewModel.of(context);
+                 final vm = GetCartViewModel.of(context);
+                  int count=vm.productList.length;
+                  if(state is GetCartSuccessState){
+                    count = state.responseEntity.data?.products?.length ?? vm.productList.length;
+                  }
                   return Badge(
-                    label: Text(
-                      vm.numOfCartItems.toString(),
-                    ),
+                    label: Text('$count'),
                     child: IconButton(
                       onPressed: () =>
                           Navigator.pushNamed(context, Routes.cartRoute),

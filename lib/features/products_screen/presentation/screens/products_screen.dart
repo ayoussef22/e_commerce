@@ -10,7 +10,7 @@ class ProductsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final productsViewModel = ProductScreenViewModel.of(context);
     return BlocBuilder<ProductScreenViewModel, ProductScreenStates>(
-      bloc: productsViewModel..getAllProducts(),
+      bloc: productsViewModel,
       builder: (context, state) {
         if (state is ProductLoadingState) {
           return const Center(

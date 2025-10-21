@@ -33,7 +33,7 @@ class ProductScreenViewModel extends Cubit<ProductScreenStates> {
     });
   }
 
-  void addToCart(String productId) async {
+  Future<void> addToCart(String productId) async {
     emit(AddToCartLoadingState());
     var either = await addToCartUseCase.invoke(productId);
     either.fold((error) {

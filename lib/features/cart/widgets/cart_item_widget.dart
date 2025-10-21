@@ -22,7 +22,11 @@ class CartItemWidget extends StatelessWidget {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
     return InkWell(
-      onTap: () => Navigator.pushNamed(context, Routes.productDetails),
+      onTap: () => Navigator.pushNamed(
+        context,
+        Routes.productDetails,
+        arguments: productCartEntity,
+      ),
       child: Container(
         height: isPortrait ? height * 0.14 : width * 0.23,
         decoration: BoxDecoration(
@@ -103,13 +107,14 @@ class CartItemWidget extends StatelessWidget {
                       ),
                       ProductCounter(
                         add: (int count) {
-                           count=productCartEntity.count!.toInt();
+                          count = productCartEntity.count!.toInt();
                           count++;
-                          getCartViewModel.updateCountInCart(productCartEntity.product?.id ?? '', count);
+                          getCartViewModel.updateCountInCart(
+                              productCartEntity.product?.id ?? '', count);
                         },
                         productCounter: productCartEntity.count!.toInt(),
                         remove: (int count) {
-                           count = productCartEntity.count!.toInt();
+                          count = productCartEntity.count!.toInt();
                           count--;
                           getCartViewModel.updateCountInCart(
                               productCartEntity.product?.id ?? '', count);
