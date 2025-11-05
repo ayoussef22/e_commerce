@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_e_commerce_c11_online/domain/entities/ProductResponseEntity.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../core/resources/assets_manager.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/styles_manager.dart';
 import '../../../../core/widget/custom_elevated_button.dart';
@@ -27,20 +26,6 @@ class ProductDetails extends StatelessWidget {
           style: getMediumStyle(color: ColorManager.appBarTitleColor)
               .copyWith(fontSize: 20.sp),
         ),
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: ImageIcon(
-                AssetImage(IconsAssets.icSearch),
-                color: ColorManager.primary,
-              )),
-          IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.shopping_cart_outlined,
-                color: ColorManager.primary,
-              )),
-        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -66,7 +51,7 @@ class ProductDetails extends StatelessWidget {
               height: 16.h,
             ),
             ProductRating(
-                productBuyers: '${product.sold} Sold',
+                productBuyers: '${product.sold}',
                 productRating: '${product.ratingsAverage}'),
             SizedBox(
               height: 16.h,

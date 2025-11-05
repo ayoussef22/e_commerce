@@ -1,5 +1,6 @@
 import 'package:flutter_e_commerce_c11_online/core/errors/Failures.dart';
 import 'package:flutter_e_commerce_c11_online/domain/entities/AddToCartResponseEntity.dart';
+import 'package:flutter_e_commerce_c11_online/domain/entities/AddToWishlistEntity.dart';
 import 'package:flutter_e_commerce_c11_online/domain/entities/ProductResponseEntity.dart';
 
 abstract class ProductScreenStates {}
@@ -31,4 +32,18 @@ class AddToCartSuccessState extends ProductScreenStates {
   AddToCartResponseEntity responseEntity;
 
   AddToCartSuccessState({required this.responseEntity});
+}
+
+class AddToWishlistLoadingState extends ProductScreenStates {}
+
+class AddToWishlistErrorState extends ProductScreenStates {
+  Failures failures;
+
+  AddToWishlistErrorState({required this.failures});
+}
+
+class AddToWishlistSuccessState extends ProductScreenStates {
+  AddToWishlistEntity responseEntity;
+
+  AddToWishlistSuccessState({required this.responseEntity});
 }

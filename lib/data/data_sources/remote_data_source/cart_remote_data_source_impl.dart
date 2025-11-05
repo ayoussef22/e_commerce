@@ -4,7 +4,6 @@ import 'package:flutter_e_commerce_c11_online/core/api/api_manager.dart';
 import 'package:flutter_e_commerce_c11_online/core/errors/Failures.dart';
 import 'package:flutter_e_commerce_c11_online/data/data_sources/remote_data_source/cart_remote_data_source.dart';
 import 'package:flutter_e_commerce_c11_online/data/model/GetCartResponseDto.dart';
-import 'package:flutter_e_commerce_c11_online/domain/entities/GetCartResponseEntity.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../core/api/end_points.dart';

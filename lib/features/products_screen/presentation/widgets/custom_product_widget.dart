@@ -35,6 +35,8 @@ class CustomProductWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cartVM = GetCartViewModel.of(context);
+    final productVM=ProductScreenViewModel.of(context);
     return InkWell(
       onTap: () => Navigator.pushNamed(context, Routes.productDetails,
           arguments: productEntity),
@@ -71,7 +73,19 @@ class CustomProductWidget extends StatelessWidget {
                   Positioned(
                     top: 8.h,
                     right: 10.w,
-                    child: HeartButton(onTap: () {}),
+                    child: HeartButton(onTap: () {
+                      // todo : add to wishlist
+                      productVM.addToWishlist(productEntity.id!);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Text(
+                              '✅ Product added to wishlist successfully'),
+                          duration: const Duration(seconds: 2),
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: ColorManager.primary,
+                        ),
+                      );
+                    }),
                   ),
                 ],
               ),
@@ -136,8 +150,7 @@ class CustomProductWidget extends StatelessWidget {
                           borderRadius: BorderRadius.circular(100),
                           child: InkWell(
                             onTap: () async {
-                              await ProductScreenViewModel.of(context)
-                                  .addToCart(productEntity.id!);
+                              await productVM.addToCart(productEntity.id!);
                               //  snackBar for 2 seconds
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
@@ -148,7 +161,6 @@ class CustomProductWidget extends StatelessWidget {
                                   backgroundColor: ColorManager.primary,
                                 ),
                               );
-                              final cartVM = GetCartViewModel.of(context);
                               cartVM.getCart();
                             },
                             child: Container(

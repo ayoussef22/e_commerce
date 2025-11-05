@@ -45,7 +45,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 CustomBottomNavBarItem(IconsAssets.icHome, "Home"),
                 CustomBottomNavBarItem(IconsAssets.icCategory, "Category"),
                 CustomBottomNavBarItem(IconsAssets.icWithList, "WishList"),
-                CustomBottomNavBarItem(IconsAssets.icProfile, "Profile"),
               ],
             ),
           ),
