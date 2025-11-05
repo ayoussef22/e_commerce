@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_e_commerce_c11_online/domain/entities/ProductResponseEntity.dart';
 import 'package:flutter_e_commerce_c11_online/domain/use_cases/add_to_cart_use_case.dart';
+import 'package:flutter_e_commerce_c11_online/domain/use_cases/add_to_wishlist_use_case.dart';
 import 'package:flutter_e_commerce_c11_online/domain/use_cases/get_all_products_use_case.dart';
 import 'package:flutter_e_commerce_c11_online/features/products_screen/presentation/cubit/product_screen_states.dart';
 import 'package:injectable/injectable.dart';
@@ -10,14 +11,16 @@ import 'package:injectable/injectable.dart';
 class ProductScreenViewModel extends Cubit<ProductScreenStates> {
   GetAllProductsUseCase productsUseCase;
   AddToCartUseCase addToCartUseCase;
+   AddToWishlistUseCase addToWishlistUseCase;
 
   ProductScreenViewModel(
-      {required this.productsUseCase, required this.addToCartUseCase})
+      {required this.productsUseCase, required this.addToCartUseCase,required this.addToWishlistUseCase})
       : super(ProductInitialState());
 
   //todo : hold data & handle logic
   List<ProductEntity> productsList = [];
   int numOfCartItems = 0;
+List<String> wishlist=[];
 
   static ProductScreenViewModel of(BuildContext context) =>
       BlocProvider.of<ProductScreenViewModel>(context);
@@ -43,5 +46,17 @@ class ProductScreenViewModel extends Cubit<ProductScreenStates> {
       print('num of product $numOfCartItems');
       emit(AddToCartSuccessState(responseEntity: response));
     });
+  }
+
+  void addToWishlist(String productId) async{
+    var either=await addToWishlistUseCase.invoke(productId);
+    either.fold((error){
+      emit(AddToWishlistErrorState(failures: error));
+    },(response){
+      wishlist=response.data!;
+      print('wishlist is $wishlist');
+      emit(AddToWishlistSuccessState(responseEntity: response));
+    }
+    );
   }
 }
