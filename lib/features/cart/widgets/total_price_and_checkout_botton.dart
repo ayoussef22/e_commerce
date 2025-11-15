@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/widget/custom_elevated_button.dart';
 
-class TotalPriceAndCheckoutBotton extends StatelessWidget {
-  const TotalPriceAndCheckoutBotton(
+class TotalPriceAndCheckoutBottom extends StatelessWidget {
+  const TotalPriceAndCheckoutBottom(
       {super.key, required this.totalPrice, required this.checkoutButtonOnTap});
   final int totalPrice;
   final void Function() checkoutButtonOnTap;
@@ -29,7 +29,7 @@ class TotalPriceAndCheckoutBotton extends StatelessWidget {
             ),
             SizedBox(height: 4.h),
             SizedBox(
-              width: 90.w,
+              width: 130.w,
               child: Text(
                 'EGP $totalPrice',
                 maxLines: 1,
